@@ -34,7 +34,7 @@ public class WordScene : MonoBehaviour
         for(int i=0; i<randomWord.GetWord().Length; i++)
         {
             GameObject letter = Instantiate(LetterPrefab, LetterParent);
-            letter.GetComponent<LetterBehaviour>().Init(randomWord.GetWord()[i]);
+            letter.GetComponent<LetterBehaviour>().Init(randomWord.GetWord()[i], this);
             AddLetterToArea(letter.GetComponent<LetterBehaviour>());
             word[i] = letter.GetComponent<LetterBehaviour>();
         }
@@ -71,5 +71,18 @@ public class WordScene : MonoBehaviour
     private void GenerateConnections(LetterBehaviour[] word)
     {
         connections = new Connections(word, connectionPrefab);
+    }
+
+    private char currentLetter = '\x0000';
+    public Color GetNextLetterColor(char _nextLetter)
+    {
+        Color output;
+
+        if (currentLetter == '\x0000') output = Color.green;
+        else output = Color.red;
+
+        currentLetter = _nextLetter;
+
+        return output;
     }
 }

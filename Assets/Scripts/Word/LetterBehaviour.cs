@@ -15,13 +15,18 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
 
     public TextMeshProUGUI letterText;
     public char letter;
+    private WordScene gameScript;
+    private Material customMaterial;
 
 
-    public void Init(char _letterValue)
+    public void Init(char _letterValue, WordScene _gameScript)
     {
         _letterValue = Char.ToUpper(_letterValue);
         letter = _letterValue;
         letterText.text = _letterValue.ToString();
+        gameScript = _gameScript;
+
+        customMaterial = letterText.gameObject.GetComponent<TextMeshProUGUI>().fontSharedMaterial;
     }
 
     private bool _selected = false;
@@ -38,6 +43,11 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
 
     IEnumerator StartOutLine(float expectedValue)
     {
+        
+        Color c = gameScript.GetNextLetterColor(letter);
+        Debug.Log((c == Color.red) + " " + (c == Color.green));
+        customMaterial.SetColor("_OutlineColor", c);
+
         float currentValue = letterText.outlineWidth;
         var t = 0f;
         while (t < 1)
@@ -46,5 +56,6 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
             letterText.outlineWidth = Mathf.Lerp(currentValue, expectedValue, t);
             yield return null;
         }
+        customMaterial = letterText.gameObject.GetComponent<TextMeshProUGUI>().fontSharedMaterial;
     }
 }
