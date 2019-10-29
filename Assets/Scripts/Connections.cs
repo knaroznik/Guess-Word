@@ -29,4 +29,27 @@ public class Connections
             letterGraph[i - 1, i] = newConnection;
         }
     }
+
+    //Force algorithm : fix
+    public bool HasConnection(LetterBehaviour A, LetterBehaviour B)
+    {
+        for (int i = 0; i < letterGraph.GetLength(0); i++)
+        {
+            for (int j = 0; j < letterGraph.GetLength(1); j++)
+            {
+                if (letterGraph[i, j].A == null) continue;
+
+                if (letterGraph[i, j].A == A && letterGraph[i, j].B == B)
+                {
+                    return true;
+                }
+
+                if (letterGraph[i, j].A == B && letterGraph[i, j].B == A)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

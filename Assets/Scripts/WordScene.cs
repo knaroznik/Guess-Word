@@ -5,7 +5,6 @@ using UnityEngine.UI;
 /// <summary>
 /// TODO : No internet Connection
 /// TODO : Moving letters?
-/// TODO : Graph from letters
 /// TODO : Filling word
 /// TODO : Menu
 /// </summary>
@@ -25,9 +24,13 @@ public class WordScene : MonoBehaviour
 
     private Word randomWord;
     private Connections connections;
+    
+    private List<LetterBehaviour> userWord;
 
     private void Start()
     {
+        userWord = new List<LetterBehaviour>();
+
         GenerateArea();
         GenerateWord();
         LetterBehaviour[] word = new LetterBehaviour[randomWord.GetWord().Length];
@@ -73,16 +76,53 @@ public class WordScene : MonoBehaviour
         connections = new Connections(word, connectionPrefab);
     }
 
-    private char currentLetter = '\x0000';
-    public Color GetNextLetterColor(char _nextLetter)
+    public bool IsConnected(LetterBehaviour nextLetter)
+    {
+        if (userWord.Count == 0) return true;
+
+        if(connections.HasConnection(userWord[userWord.Count-1], nextLetter))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void OnGUI()
+    {
+        string customWord = "";
+        for(int i=0; i < userWord.Count; i++)
+        {
+            customWord += userWord[i].letter + " ";
+        }
+        GUI.Box(new Rect(0, 0, 300, 100), "Word");
+        GUI.Label(new Rect(10, 10, 300, 50), "Word : " + customWord);
+    }
+
+
+    public Color GetNextLetterColor(bool _selecting, LetterBehaviour letter)
     {
         Color output;
 
-        if (currentLetter == '\x0000') output = Color.green;
+        if (userWord.Count == 0)output = Color.green;
         else output = Color.red;
 
-        currentLetter = _nextLetter;
+        if (!_selecting)
+        {
+            userWord.Add(letter);
+        }
+        else
+        {
+            int index = userWord.IndexOf(letter);
+            int wordLength = userWord.Count-1;
 
+            for(int i=wordLength; i>= index; i--)
+            {
+                userWord[i].Deselect();
+                userWord.Remove(userWord[i]);
+            }
+            
+        }
         return output;
     }
 }

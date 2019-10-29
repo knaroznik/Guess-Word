@@ -33,20 +33,31 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.LogWarning(_selected);
+
         StopAllCoroutines();
 
-        if (_selected) StartCoroutine(StartOutLine(0f));
-        else StartCoroutine(StartOutLine(0.7f));
-
-        _selected = !_selected;
+        if (_selected)
+        {
+            //Deselect all letters when deselecting mid 
+            StartCoroutine(StartOutLine(0f, true));
+        }
+        else
+        {
+            //Only connected
+            if (gameScript.IsConnected(this)) StartCoroutine(StartOutLine(0.7f, true));
+        }
+        
     }
 
-    IEnumerator StartOutLine(float expectedValue)
+    IEnumerator StartOutLine(float expectedValue, bool force)
     {
-        
-        Color c = gameScript.GetNextLetterColor(letter);
-        Debug.Log((c == Color.red) + " " + (c == Color.green));
-        customMaterial.SetColor("_OutlineColor", c);
+        if (force)
+        {
+            _selected = !_selected;
+            Color c = gameScript.GetNextLetterColor(expectedValue == 0f, this);
+            if (expectedValue != 0f) customMaterial.SetColor("_OutlineColor", c);
+        }
 
         float currentValue = letterText.outlineWidth;
         var t = 0f;
@@ -57,5 +68,11 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
             yield return null;
         }
         customMaterial = letterText.gameObject.GetComponent<TextMeshProUGUI>().fontSharedMaterial;
+    }
+
+    public void Deselect()
+    {
+        StartCoroutine(StartOutLine(0f, false));
+        _selected = false;
     }
 }

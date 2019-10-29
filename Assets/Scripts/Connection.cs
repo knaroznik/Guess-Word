@@ -5,16 +5,23 @@ using UnityEngine;
 public class Connection
 {
     private LineRenderer connectionRenderer;
+    public LetterBehaviour A;
+    public LetterBehaviour B;
 
     public Connection()
     {
         connectionRenderer = null;
+        A = null;
+        B = null;
     }
 
-    public Connection(LetterBehaviour A, LetterBehaviour B, LineRenderer _renderer)
+    public Connection(LetterBehaviour _A, LetterBehaviour _B, LineRenderer _renderer)
     {
         connectionRenderer = _renderer;
-        connectionRenderer.SetPosition(0, A.GetCustomPosition());
-        connectionRenderer.SetPosition(1, B.GetCustomPosition());
+        connectionRenderer.SetPosition(0, _A.GetCustomPosition());
+        connectionRenderer.SetPosition(1, _B.GetCustomPosition());
+
+        A = _A;
+        B = _B;
     }
 }
