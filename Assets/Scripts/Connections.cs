@@ -23,11 +23,33 @@ public class Connections
 
         for(int i=1; i<length; i++)
         {
-            GameObject connection = MonoBehaviour.Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
-            Connection newConnection = new Connection(word[i], word[i - 1], connection.GetComponent<LineRenderer>());
-            letterGraph[i, i - 1] = newConnection;
-            letterGraph[i - 1, i] = newConnection;
+            AddConnection(word, i, i - 1);
         }
+
+        //Random Connections
+        int randomConnectionCount = length / 3;
+        for (int i = 0; i < randomConnectionCount; i++)
+        {
+            int A = Random.Range(0, length);
+            int B = Random.Range(0, length);
+            if (A == B)
+            {
+                A += 2;
+                A = A % length;
+            }
+            if (!letterGraph[A, B].Initialized)
+            {
+                AddConnection(word, A, B);
+            }
+        }
+    }
+
+    public void AddConnection(LetterBehaviour[] word, int i, int j)
+    {
+        GameObject connection = MonoBehaviour.Instantiate(linePrefab, Vector3.zero, Quaternion.identity);
+        Connection newConnection = new Connection(word[i], word[j], connection.GetComponent<LineRenderer>());
+        letterGraph[i, j] = newConnection;
+        letterGraph[j, i] = newConnection;
     }
 
     //Force algorithm : fix
@@ -51,5 +73,17 @@ public class Connections
             }
         }
         return false;
+    }
+
+    public void Disable()
+    {
+        for (int i = 0; i < letterGraph.GetLength(0); i++)
+        {
+            for (int j = 0; j < letterGraph.GetLength(1); j++)
+            {
+                if (letterGraph[i, j].connectionRenderer != null) MonoBehaviour.Destroy(letterGraph[i, j].connectionRenderer.gameObject);
+            }
+        }
+        letterGraph = new Connection[0, 0];
     }
 }

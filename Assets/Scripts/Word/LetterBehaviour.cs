@@ -15,11 +15,11 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
 
     public TextMeshProUGUI letterText;
     public char letter;
-    private WordScene gameScript;
+    private InGameScreen gameScript;
     private Material customMaterial;
 
 
-    public void Init(char _letterValue, WordScene _gameScript)
+    public void Init(char _letterValue, InGameScreen _gameScript)
     {
         _letterValue = Char.ToUpper(_letterValue);
         letter = _letterValue;
@@ -33,7 +33,6 @@ public class LetterBehaviour : MonoBehaviour, IPosition, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.LogWarning(_selected);
 
         StopAllCoroutines();
 

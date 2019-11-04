@@ -114,7 +114,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   letterText: {fileID: 3942812458025960155}
   letter: 0
-  custonMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
 --- !u!1 &2716503916094269286
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,8 +181,9 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 79459efec17a4d00a321bdcc27bbc385, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fe9e29837f30eb449a7c0eb8f4e52b78, type: 2}
+  m_sharedMaterial: {fileID: -7691998635213204389, guid: fe9e29837f30eb449a7c0eb8f4e52b78,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 22.05
+  m_fontSize: 25.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
