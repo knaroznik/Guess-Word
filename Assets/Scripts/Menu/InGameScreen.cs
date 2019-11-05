@@ -11,7 +11,6 @@ public class InGameScreen : BaseScreen
     public GameObject LetterPrefab;
     public GameObject connectionPrefab;
     public Transform LetterParent;
-    public float letterSize = 2f;
     public float descriptionSize = 1f;
 
     Area<LetterBehaviour> cameraArea;
@@ -22,8 +21,11 @@ public class InGameScreen : BaseScreen
 
     private List<LetterBehaviour> userWord;
 
-    private void OnEnable()
+    public GameObject endPanel;
+
+    public void OnEnable()
     {
+        endPanel.SetActive(false);
         userWord = new List<LetterBehaviour>();
 
         GenerateArea();
@@ -52,20 +54,16 @@ public class InGameScreen : BaseScreen
 
     private void AddLetterToArea(LetterBehaviour letter)
     {
-        Vector3 pos = cameraArea.GetRandomPoint();
+        Vector3 pos = cameraArea.GetRandomPoint(letter);
         letter.gameObject.transform.position = pos;
 
-        if (!cameraArea.Add(letter))
-        {
-            AddLetterToArea(letter);
-        }
     }
 
     public void GenerateArea()
     {
         Vector3 pos = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0f));
-        Bounds b = new Bounds(Camera.main.transform.position + new Vector3(0, -descriptionSize / 2, 10), new Vector3(pos.x, pos.y, 0f) * 2f - new Vector3(letterSize * 2, letterSize * 2 + descriptionSize / 2, 0f));
-        cameraArea = new Area<LetterBehaviour>(letterSize, b);
+        Bounds b = new Bounds(Camera.main.transform.position + new Vector3(0, -descriptionSize / 2, 10), new Vector3(pos.x, pos.y, 0f) * 2f - new Vector3(4, 4 + descriptionSize / 2, 0f));
+        cameraArea = new Area<LetterBehaviour>(b);
     }
 
     public void GenerateWord()
@@ -92,19 +90,6 @@ public class InGameScreen : BaseScreen
         return false;
     }
 
-    public void OnGUI()
-    {
-        return;
-        string customWord = "";
-        for (int i = 0; i < userWord.Count; i++)
-        {
-            customWord += userWord[i].letter + " ";
-        }
-        GUI.Box(new Rect(0, 0, 300, 100), "Word");
-        GUI.Label(new Rect(10, 10, 300, 50), "Word : " + customWord);
-    }
-
-
     public Color GetNextLetterColor(bool _selecting, LetterBehaviour letter)
     {
         Color output;
@@ -115,6 +100,8 @@ public class InGameScreen : BaseScreen
         if (!_selecting)
         {
             userWord.Add(letter);
+
+            TryEndCondition();
         }
         else
         {
@@ -129,5 +116,25 @@ public class InGameScreen : BaseScreen
 
         }
         return output;
+    }
+
+    public void TryEndCondition()
+    {
+        string currentWord = "";
+        for(int i=0; i<userWord.Count; i++)
+        {
+            currentWord += userWord[i].letter;
+        }
+        string originalWord = randomWord.GetWord();
+
+        currentWord = currentWord.ToLower();
+        originalWord = originalWord.ToLower();
+
+        if(currentWord == originalWord)
+        {
+            endPanel.SetActive(true);
+            OnDisable();
+            endPanel.transform.GetChild(0).GetComponent<Text>().text = "YES!\n The word is :\n " + currentWord;
+        }
     }
 }
