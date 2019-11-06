@@ -10,12 +10,33 @@ public class BootScene : MonoBehaviour
 
     IEnumerator Start()
     {
-        for(int i=0; i<splashes.Length; i++)
+        HideSplashes();
+
+        AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(1);
+        asyncOperation.allowSceneActivation = false;
+
+        yield return StartCoroutine(ShowSplashes());
+
+        asyncOperation.allowSceneActivation = true;
+
+        while (!asyncOperation.isDone)
+        {
+            yield return 0;
+        }
+        
+    }
+
+    private void HideSplashes()
+    {
+        for (int i = 0; i < splashes.Length; i++)
         {
             splashes[i].color = Color.clear;
         }
+    }
 
-        for(int i=0; i<splashes.Length; i++)
+    private  IEnumerator ShowSplashes()
+    {
+        for (int i = 0; i < splashes.Length; i++)
         {
             var currentA = Color.clear;
             var t = 0f;
@@ -35,8 +56,5 @@ public class BootScene : MonoBehaviour
                 yield return null;
             }
         }
-
-        SceneManager.LoadScene(1);
-        
     }
 }
