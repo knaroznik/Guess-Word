@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MainScreen : BaseScreen
 {
 
     public TextMeshProUGUI[] buttonTexts;
+
+    public UnityEvent onEnableEvent;
 
     private void Awake()
     {
@@ -16,5 +19,10 @@ public class MainScreen : BaseScreen
             buttonTexts[i].enableAutoSizing = false;
             buttonTexts[i].fontSize = fontSize;
         }
+    }
+
+    public void OnEnable()
+    {
+        onEnableEvent.Invoke();
     }
 }

@@ -6,40 +6,38 @@ using UnityEngine.Events;
 public class ButtonAnimatorBehaviour : MonoBehaviour
 {
     public float AnimationDelay;
-    public bool PlayAction = false;
+    
     public UnityEvent endAnimationAction;
 
-    Animator anim;
+    private Vector3 originalPosition;
+
 
     private IEnumerator Start()
     {
-        anim = GetComponent<Animator>();
-        anim.SetFloat("AnimationSpeed", 0f);
+        originalPosition = transform.position;
+        Vector3 offScreenPosition = new Vector3(Screen.width + this.GetComponent<RectTransform>().rect.width/2, transform.position.y, transform.position.z);
+        transform.position = offScreenPosition;
+
         yield return new WaitForSeconds(AnimationDelay);
-        anim.SetFloat("AnimationSpeed", 1f);
+
+        StartCoroutine(LerpPosition(offScreenPosition, originalPosition));
     }
 
-    
-
-    public void Play()
+    private IEnumerator LerpPosition(Vector3 start, Vector3 end)
     {
-        bool x = anim.GetBool("AnotherAnimation");
-        anim.SetBool("AnotherAnimation", !x);
-        PlayAction = true;
+        var currentA = start;
+        var t = 0f;
+        while (t < 1)
+        {
+            t += Time.deltaTime / 0.25f;
+            transform.position = Vector3.Lerp(currentA, end, t);
+            yield return null;
+        }
     }
 
-    public void PlayAnimationOnly()
-    {
-        bool x = anim.GetBool("AnotherAnimation");
-        anim.SetBool("AnotherAnimation", !x);
-    }
 
     public void PlayUnityAction()
     {
-        if (PlayAction)
-        {
-            PlayAction = false;
-            endAnimationAction.Invoke();
-        }
+        endAnimationAction.Invoke();
     }
 }
