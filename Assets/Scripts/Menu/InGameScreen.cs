@@ -69,7 +69,6 @@ public class InGameScreen : BaseScreen
     public void GenerateWord()
     {
         randomWord = new Word();
-        Debug.Log(randomWord.GetWord());
         descriptionText.text = randomWord.GetDescription();
     }
 
